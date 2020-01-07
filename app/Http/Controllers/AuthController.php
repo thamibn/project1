@@ -1,56 +1,88 @@
 <?php
-/**
- * File AuthController.php
- *
- * @author Tuan Duong <bacduong@gmail.com>
- * @package Laravue
- * @version 1.0
- */
+
 namespace App\Http\Controllers;
 
-use App\Laravue\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use App\Services\AuthService;
+use Illuminate\Http\JsonResponse;
+use App\Http\Requests\LoginDetails;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Resources\UserResource;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Contracts\Container\BindingResolutionException;
 
-/**
- * Class AuthController
- *
- * @package App\Http\Controllers
- */
 class AuthController extends Controller
 {
+    const REFRESH_TOKEN = 'refreshToken';
+    private $authService;
+
+    /**
+     * AuthController constructor.
+     * @param AuthService $authService
+     */
+    public function __construct(AuthService $authService)
+    {
+        $this->authService = $authService;
+    }
+
+
+    /**
+     * @param LoginDetails $request
+     * @return JsonResponse
+     * @throws BindingResolutionException
+     * @throws ValidationException
+     */
+    public function login(LoginDetails $request){
+        try {
+            $data = $this->authService->attemptLogin($request);
+            $refreshToken = $data['refresh_token'];
+            unset($data['refresh_token']);
+            return response()->json([
+                'success' => true,
+                'message' => "Successfully logged in",
+                'data' => $data,
+                ])->withCookie(self::REFRESH_TOKEN,$refreshToken, 14400); //valid for 10 days since the refresh token is also valid for 10 days
+        } catch (ValidationException $e) {
+            throw $e;
+        }
+    }
+
+
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
+     * @throws BindingResolutionException
+     * @throws ValidationException
      */
-    public function login(Request $request)
+    public function refreshToken(Request $request)
     {
-        $credentials = $request->only('email', 'password');
-        if ($token = $this->guard()->attempt($credentials)) {
-            return response()->json(new UserResource(Auth::user()), Response::HTTP_OK)->header('Authorization', $token);
+        try {
+            $data = $this->authService->attemptRefresh();
+            $refreshToken = $data['refresh_token'];
+            unset($data['refresh_token']);
+            return response()->json([
+                'success' => true,
+                'message' => "Successfully refreshed token",
+                'data' => $data,
+            ])->withCookie(self::REFRESH_TOKEN,$refreshToken, 14400);
+        } catch (ValidationException $e) {
+            throw $e;
         }
-
-        return response()->json(new JsonResponse([], 'login_error'), Response::HTTP_UNAUTHORIZED);
-    }
-
-    public function logout()
-    {
-        $this->guard()->logout();
-        return response()->json((new JsonResponse())->success([]), Response::HTTP_OK);
-    }
-
-    public function user()
-    {
-        return new UserResource(Auth::user());
     }
 
     /**
-     * @return mixed
+     * @param Request $request
+     * @return JsonResponse
      */
-    private function guard()
-    {
-        return Auth::guard();
+    public function logout(Request $request){
+        $data = $this->authService->logout($request);
+        return $this->successResponse("logout successfully", $data);
     }
+
+    /**
+     * @return JsonResponse
+     */
+    public function user(){
+        return $this->successResponse("user", Auth::user());
+    }
+
 }
