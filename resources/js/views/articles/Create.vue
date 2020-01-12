@@ -3,9 +3,9 @@
 </template>
 
 <script>
-import ArticleDetail from './components/ArticleDetail';
+  import ArticleDetail from './components/ArticleDetail';
 
-export default {
+  export default {
   name: 'CreateForm',
   components: { ArticleDetail },
 };

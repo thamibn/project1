@@ -16,12 +16,12 @@
 </template>
 
 <script>
-import RightPanel from '@/components/RightPanel';
-import { Navbar, Sidebar, AppMain, TagsView, Settings } from './components';
-import ResizeMixin from './mixin/resize-handler.js';
-import { mapState } from 'vuex';
+  import RightPanel from '@/components/RightPanel';
+  import {AppMain, Navbar, Settings, Sidebar, TagsView} from './components';
+  import ResizeMixin from './mixin/resize-handler.js';
+  import {mapState} from 'vuex';
 
-export default {
+  export default {
   name: 'Layout',
   components: {
     AppMain,

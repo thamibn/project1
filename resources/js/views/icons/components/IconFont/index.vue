@@ -19,10 +19,10 @@
 </template>
 
 <script>
-import icons from './require-icons';
-import clipboard from '@/utils/clipboard';
+  import icons from './require-icons';
+  import clipboard from '@/utils/clipboard';
 
-export default {
+  export default {
   name: 'IconFont',
   data() {
     return {

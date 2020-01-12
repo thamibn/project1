@@ -22,6 +22,7 @@ Mix.listen('configReady', webpackConfig => {
 
 mix.webpackConfig(config);
 
+
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -70,3 +71,5 @@ if (mix.inProduction()) {
       devtool: 'cheap-eval-source-map', // Fastest for development
     });
 }
+
+

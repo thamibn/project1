@@ -38,9 +38,9 @@
 </template>
 
 <script>
-import Todo from './Todo.vue';
+  import Todo from './Todo.vue';
 
-const STORAGE_KEY = 'todos';
+  const STORAGE_KEY = 'todos';
 const filters = {
   all: todos => todos,
   active: todos => todos.filter(todo => !todo.done),

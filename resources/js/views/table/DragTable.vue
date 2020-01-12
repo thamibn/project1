@@ -63,10 +63,10 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/article';
-import Sortable from 'sortablejs';
+  import {fetchList} from '@/api/article';
+  import Sortable from 'sortablejs';
 
-export default {
+  export default {
   name: 'DragTable',
   filters: {
     statusFilter(status) {

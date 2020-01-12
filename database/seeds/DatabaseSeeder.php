@@ -1,9 +1,11 @@
 <?php
 
-use App\Laravue\Models\User;
+use App\Models\User;
 use Illuminate\Database\Seeder;
+
+use App\Models\Role_Permission\Acl;
 use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
+use App\Models\Role_Permission\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,35 +18,35 @@ class DatabaseSeeder extends Seeder
     {
         $admin = User::create([
             'name' => 'Admin',
-            'email' => 'admin@laravue.dev',
-            'password' => Hash::make('laravue'),
+            'email' => 'admin@project.dev',
+            'password' => Hash::make('123456'),
         ]);
         $manager = User::create([
             'name' => 'Manager',
-            'email' => 'manager@laravue.dev',
-            'password' => Hash::make('laravue'),
+            'email' => 'manager@project.dev',
+            'password' => Hash::make('123456'),
         ]);
         $editor = User::create([
             'name' => 'Editor',
-            'email' => 'editor@laravue.dev',
-            'password' => Hash::make('laravue'),
+            'email' => 'editor@project.dev',
+            'password' => Hash::make('123456'),
         ]);
         $user = User::create([
             'name' => 'User',
-            'email' => 'user@laravue.dev',
-            'password' => Hash::make('laravue'),
+            'email' => 'user@project.dev',
+            'password' => Hash::make('123456'),
         ]);
         $visitor = User::create([
             'name' => 'Visitor',
-            'email' => 'visitor@laravue.dev',
-            'password' => Hash::make('laravue'),
+            'email' => 'visitor@project.dev',
+            'password' => Hash::make('123456'),
         ]);
 
-        $adminRole = Role::findByName(\App\Laravue\Acl::ROLE_ADMIN);
-        $managerRole = Role::findByName(\App\Laravue\Acl::ROLE_MANAGER);
-        $editorRole = Role::findByName(\App\Laravue\Acl::ROLE_EDITOR);
-        $userRole = Role::findByName(\App\Laravue\Acl::ROLE_USER);
-        $visitorRole = Role::findByName(\App\Laravue\Acl::ROLE_VISITOR);
+        $adminRole = Role::findByName(Acl::ROLE_ADMIN);
+        $managerRole = Role::findByName(Acl::ROLE_MANAGER);
+        $editorRole = Role::findByName(Acl::ROLE_EDITOR);
+        $userRole = Role::findByName(Acl::ROLE_USER);
+        $visitorRole = Role::findByName(Acl::ROLE_VISITOR);
         $admin->syncRoles($adminRole);
         $manager->syncRoles($managerRole);
         $editor->syncRoles($editorRole);

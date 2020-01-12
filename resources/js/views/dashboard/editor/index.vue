@@ -18,11 +18,11 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import PanThumb from '@/components/PanThumb';
-import GithubCorner from '@/components/GithubCorner';
+  import {mapGetters} from 'vuex';
+  import PanThumb from '@/components/PanThumb';
+  import GithubCorner from '@/components/GithubCorner';
 
-export default {
+  export default {
   name: 'DashboardEditor',
   components: { PanThumb, GithubCorner },
   data() {

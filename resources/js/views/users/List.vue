@@ -125,14 +125,14 @@
 </template>
 
 <script>
-import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
-import UserResource from '@/api/user';
-import Resource from '@/api/resource';
-import waves from '@/directive/waves'; // Waves directive
-import permission from '@/directive/permission'; // Permission directive
-import checkPermission from '@/utils/permission'; // Permission checking
+  import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
+  import UserResource from '@/api/user';
+  import Resource from '@/api/resource';
+  import waves from '@/directive/waves'; // Waves directive
+  import permission from '@/directive/permission'; // Permission directive
+  import checkPermission from '@/utils/permission'; // Permission checking
 
-const userResource = new UserResource();
+  const userResource = new UserResource();
 const permissionResource = new Resource('permissions');
 
 export default {

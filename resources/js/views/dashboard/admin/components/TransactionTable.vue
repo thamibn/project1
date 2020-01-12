@@ -25,9 +25,9 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/order';
+  import {fetchList} from '@/api/order';
 
-export default {
+  export default {
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -51,9 +51,15 @@ export default {
   },
   methods: {
     async fetchData() {
-      const { data } = await fetchList();
-      this.list = data.items.slice(0, 8);
-      this.loading = false;
+      const { data } = await fetchList().then((res) => {
+        this.list = data.items.slice(0, 8);
+        this.loading = false;
+        console.log(res);
+      }).catch(error =>{
+        console.log(error.error);
+        this.loading = false;
+      });
+
     },
   },
 };

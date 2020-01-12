@@ -13,9 +13,9 @@
 </template>
 
 <script>
-import TabPane from './components/TabPane';
+  import TabPane from './components/TabPane';
 
-export default {
+  export default {
   name: 'Tab',
   components: { TabPane },
   data() {

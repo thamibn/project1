@@ -17,9 +17,9 @@
 </template>
 
 <script>
-import BackToTop from '@/components/BackToTop';
+  import BackToTop from '@/components/BackToTop';
 
-export default {
+  export default {
   name: 'BackToTopDemo',
   components: { BackToTop },
   data() {

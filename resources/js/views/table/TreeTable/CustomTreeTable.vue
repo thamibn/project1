@@ -85,10 +85,10 @@
 </template>
 
 <script>
-import TreeTable from '@/components/TreeTable';
-import data from './data.js';
+  import TreeTable from '@/components/TreeTable';
+  import data from './data.js';
 
-export default {
+  export default {
   components: { TreeTable },
   data() {
     return {

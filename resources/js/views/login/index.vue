@@ -1,78 +1,68 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
+    <ValidationObserver ref="loginForm" v-slot="{ handleSubmit }">
+    <el-form v-on:keyup.enter.native="handleSubmit(handleLogin)" :model="loginForm" class="login-form" auto-complete="on" label-position="left">
       <h3 class="title">
         {{ $t('login.title') }}
       </h3>
-      <lang-select class="set-language" />
-      <el-form-item prop="email">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
-        <el-input v-model="loginForm.email" name="email" type="text" auto-complete="on" :placeholder="$t('login.email')" />
-      </el-form-item>
-      <el-form-item prop="password">
-        <span class="svg-container">
-          <svg-icon icon-class="password" />
-        </span>
-        <el-input
-          v-model="loginForm.password"
-          :type="pwdType"
-          name="password"
-          auto-complete="on"
-          placeholder="password"
-          @keyup.enter.native="handleLogin"
-        />
-        <span class="show-pwd" @click="showPwd">
-          <svg-icon icon-class="eye" />
-        </span>
-      </el-form-item>
+
+      <ValidationProvider name="email" rules="required|email" v-slot="{ errors }">
+        <el-form-item prop="email" :error="errors[0]">
+          <span class="svg-container">
+            <svg-icon icon-class="user" />
+          </span>
+          <el-input
+            v-model="loginForm.email"
+            name="email"
+            type="test"
+            auto-complete="on"
+            placeholder="Email" />
+        </el-form-item>
+      </ValidationProvider>
+
+      <ValidationProvider name="password" rules="required|min:6" v-slot="{ errors }">
+        <el-form-item prop="password" :error="errors[0]">
+          <span class="svg-container">
+            <svg-icon icon-class="password" />
+          </span>
+          <el-input
+            v-model="loginForm.password"
+            :type="pwdType"
+            name="password"
+            auto-complete="on"
+            placeholder="Password"
+          />
+          <span class="show-pwd" @click="showPwd">
+            <svg-icon :icon-class="iconName" />
+          </span>
+        </el-form-item>
+      </ValidationProvider>
       <el-form-item>
-        <el-button :loading="loading" type="primary" style="width:100%;" @click.native.prevent="handleLogin">
+        <el-button :loading="loading" type="primary" style="width:100%;" @click.native.prevent="handleSubmit(handleLogin)">
           Sign in
         </el-button>
       </el-form-item>
       <div class="tips">
-        <span style="margin-right:20px;">Email: admin@laravue.dev</span>
-        <span>Password: laravue</span>
+        <span style="margin-right:20px;">Email: admin@project.dev</span>
+        <span>Password: 123456</span>
       </div>
     </el-form>
+    </ValidationObserver>
   </div>
 </template>
 
 <script>
-import LangSelect from '@/components/LangSelect';
-import { validEmail } from '@/utils/validate';
-
-export default {
+  export default {
   name: 'Login',
-  components: { LangSelect },
   data() {
-    const validateEmail = (rule, value, callback) => {
-      if (!validEmail(value)) {
-        callback(new Error('Please enter the correct email'));
-      } else {
-        callback();
-      }
-    };
-    const validatePass = (rule, value, callback) => {
-      if (value.length < 4) {
-        callback(new Error('Password cannot be less than 4 digits'));
-      } else {
-        callback();
-      }
-    };
     return {
       loginForm: {
-        email: 'admin@laravue.dev',
-        password: 'laravue',
-      },
-      loginRules: {
-        email: [{ required: true, trigger: 'blur', validator: validateEmail }],
-        password: [{ required: true, trigger: 'blur', validator: validatePass }],
+        email: 'admin@project.dev',
+        password: '123456',
       },
       loading: false,
       pwdType: 'password',
+      iconName: "eye-close",
       redirect: undefined,
     };
   },
@@ -87,27 +77,23 @@ export default {
   methods: {
     showPwd() {
       if (this.pwdType === 'password') {
-        this.pwdType = '';
+        this.pwdType = 'text';
+        this.iconName = "eye-open"
       } else {
         this.pwdType = 'password';
+        this.iconName = "eye-close"
       }
     },
     handleLogin() {
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          this.loading = true;
-          this.$store.dispatch('user/login', this.loginForm)
-            .then(() => {
-              this.$router.push({ path: this.redirect || '/' });
-              this.loading = false;
-            })
-            .catch(() => {
-              this.loading = false;
-            });
-        } else {
-          console.log('error submit!!');
-          return false;
-        }
+    this.loading = true;
+    this.$store.dispatch('user/login', this.loginForm)
+      .then(() => {
+        this.$router.push({ path: this.redirect || '/' });
+        this.loading = false;
+      })
+      .catch(error => {
+        this.$refs.loginForm.setErrors(error.response.data.error.message);
+        this.loading = false;
       });
     },
   },

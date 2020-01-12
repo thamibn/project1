@@ -166,8 +166,9 @@
 </template>
 
 <script>
-import Resource from '@/api/resource';
-const userResource = new Resource('users');
+  import Resource from '@/api/resource';
+
+  const userResource = new Resource('users');
 
 export default {
   props: {

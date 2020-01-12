@@ -29,10 +29,10 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import PanThumb from '@/components/PanThumb';
+  import {mapGetters} from 'vuex';
+  import PanThumb from '@/components/PanThumb';
 
-export default {
+  export default {
   components: { PanThumb },
 
   filters: {

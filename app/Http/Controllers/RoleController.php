@@ -1,34 +1,37 @@
 <?php
-/**
- * File RoleController.php
- *
- * @author Tuan Duong <bacduong@gmail.com>
- * @package Laravue
- * @version 1.0
- */
+
 namespace App\Http\Controllers;
 
-use App\Http\Resources\PermissionResource;
-use App\Laravue\Models\Permission;
+use App\Services\RoleService;
+use App\Models\Role_Permission\Acl;
+use App\Models\Role_Permission\Role;
 use Illuminate\Http\Request;
-use App\Laravue\Models\Role;
-use App\Http\Resources\RoleResource;
 
-/**
- * Class RoleController
- *
- * @package App\Http\Controllers
- */
 class RoleController extends Controller
 {
+
+    /**
+     * @var \App\Services\RoleService
+     */
+    private $roleService;
+
+    /**
+     * RoleController constructor.
+     * @param \App\Services\RoleService $roleService
+     */
+    public function __construct(RoleService $roleService) {
+        $this->middleware('permission:' . Acl::PERMISSION_PERMISSION_MANAGE);
+        $this->roleService = $roleService;
+    }
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index()
     {
-        return RoleResource::collection(Role::all());
+        return $this->roleService->all();
     }
 
     /**
@@ -45,7 +48,7 @@ class RoleController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  Role
+     * @param  \App\Models\Role_Permission\Role  $role
      * @return \Illuminate\Http\Response
      */
     public function show(Role $role)
@@ -57,41 +60,22 @@ class RoleController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  Role $role
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Role_Permission\Role  $role
+     * @return \App\Http\Resources\RoleResource|string
      */
     public function update(Request $request, Role $role)
     {
-        if ($role === null || $role->isAdmin()) {
-            return response()->json(['error' => 'Role not found'], 404);
-        }
-
-        $permissionIds = $request->get('permissions', []);
-        $permissions = Permission::allowed()->whereIn('id', $permissionIds)->get();
-        $role->syncPermissions($permissions);
-        $role->save();
-        return new RoleResource($role);
+        return $this->roleService->update($request,$role);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Models\Role_Permission\Role  $role
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Role $role)
     {
         //
-    }
-
-    /**
-     * Get permissions from role
-     *
-     * @param  Role $role
-     * @return \Illuminate\Http\Response
-     */
-    public function permissions(Role $role)
-    {
-        return PermissionResource::collection($role->permissions);
     }
 }

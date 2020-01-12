@@ -12,11 +12,11 @@
 </template>
 
 <script>
-import Driver from 'driver.js'; // import driver.js
-import 'driver.js/dist/driver.min.css'; // import driver.js css
-import steps from './define-steps';
+  import Driver from 'driver.js'; // import driver.js
+  import 'driver.js/dist/driver.min.css'; // import driver.js css
+  import steps from './define-steps';
 
-export default {
+  export default {
   name: 'Guide',
   data() {
     return {

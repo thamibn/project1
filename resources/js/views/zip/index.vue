@@ -37,9 +37,9 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/article';
+  import {fetchList} from '@/api/article';
 
-export default {
+  export default {
   name: 'ExportZip',
   data() {
     return {

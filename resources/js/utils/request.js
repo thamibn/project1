@@ -1,6 +1,7 @@
 import axios from 'axios';
-import { Message } from 'element-ui';
-import { getToken, setToken } from '@/utils/auth';
+import {Message} from 'element-ui';
+import { Notification } from 'element-ui';
+import {getToken, setToken} from '@/utils/auth';
 
 // Create axios instance
 const service = axios.create({
@@ -20,7 +21,6 @@ service.interceptors.request.use(
   },
   error => {
     // Do something with request error
-    console.log(error); // for debug
     Promise.reject(error);
   }
 );
@@ -37,17 +37,23 @@ service.interceptors.response.use(
   },
   error => {
     let message = error.message;
-    if (error.response.data && error.response.data.errors) {
-      message = error.response.data.errors;
-    } else if (error.response.data && error.response.data.error) {
-      message = error.response.data.error;
+    let statusCode = 404;
+    let title = "Error";
+
+    if (error.response.data && error.response.data.error) {
+      message = error.response.data.error.message;
+      statusCode = error.response.status;
+      title = error.response.statusText;
     }
 
-    Message({
-      message: message,
-      type: 'error',
-      duration: 5 * 1000,
-    });
+    if(statusCode !== 422 || statusCode !== 429){
+      Notification({
+        title: title,
+        message: message,
+        type: 'error',
+        duration: 4000,
+      });
+    }
     return Promise.reject(error);
   },
 );

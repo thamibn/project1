@@ -5,10 +5,10 @@
 </template>
 
 <script>
-import Dropzone from 'dropzone';
-import 'dropzone/dist/dropzone.css';
+  import Dropzone from 'dropzone';
+  import 'dropzone/dist/dropzone.css';
 
-Dropzone.autoDiscover = false;
+  Dropzone.autoDiscover = false;
 
 export default {
   props: {

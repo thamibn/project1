@@ -41,10 +41,10 @@
 </template>
 
 <script>
-import treeTable from '@/components/TreeTable';
-import data from './data';
+  import treeTable from '@/components/TreeTable';
+  import data from './data';
 
-export default {
+  export default {
   name: 'TreeTableDemo',
   components: { treeTable },
   data() {

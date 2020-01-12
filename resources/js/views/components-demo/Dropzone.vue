@@ -11,9 +11,9 @@
 </template>
 
 <script>
-import Dropzone from '@/components/Dropzone';
+  import Dropzone from '@/components/Dropzone';
 
-export default {
+  export default {
   name: 'DropzoneDemo',
   components: { Dropzone },
   methods: {

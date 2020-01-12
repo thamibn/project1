@@ -5,9 +5,9 @@
 </template>
 
 <script>
-import Chart from '@/components/Charts/MixChart';
+  import Chart from '@/components/Charts/MixChart';
 
-export default {
+  export default {
   name: 'MixChart',
   components: { Chart },
 };

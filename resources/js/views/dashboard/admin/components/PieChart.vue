@@ -3,11 +3,12 @@
 </template>
 
 <script>
-import echarts from 'echarts';
-require('echarts/theme/macarons'); // echarts theme
-import { debounce } from '@/utils';
+  import echarts from 'echarts';
+  import {debounce} from '@/utils';
 
-export default {
+  require('echarts/theme/macarons'); // echarts theme
+
+  export default {
   props: {
     className: {
       type: String,

@@ -109,20 +109,16 @@
 </template>
 
 <script>
-import Tinymce from '@/components/Tinymce';
-import Upload from '@/components/Upload/SingleImage';
-import MDinput from '@/components/MDinput';
-import Sticky from '@/components/Sticky'; // Sticky header
-import { validURL } from '@/utils/validate';
-import { fetchArticle } from '@/api/article';
-import { userSearch } from '@/api/search';
-import {
-  CommentDropdown,
-  PlatformDropdown,
-  SourceUrlDropdown,
-} from './Dropdown';
+  import Tinymce from '@/components/Tinymce';
+  import Upload from '@/components/Upload/SingleImage';
+  import MDinput from '@/components/MDinput';
+  import Sticky from '@/components/Sticky'; // Sticky header
+  import {validURL} from '@/utils/validate';
+  import {fetchArticle} from '@/api/article';
+  import {userSearch} from '@/api/search';
+  import {CommentDropdown, PlatformDropdown, SourceUrlDropdown,} from './Dropdown';
 
-const defaultForm = {
+  const defaultForm = {
   status: 'draft',
   title: '',
   content: '',

@@ -6,7 +6,7 @@
  * @package Laravue
  * @version 1.0
  */
-namespace App\Laravue;
+namespace App\Models\Role_Permission;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;

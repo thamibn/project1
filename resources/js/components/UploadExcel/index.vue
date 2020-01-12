@@ -11,9 +11,9 @@
 </template>
 
 <script>
-import XLSX from 'xlsx';
+  import XLSX from 'xlsx';
 
-export default {
+  export default {
   props: {
     beforeUpload: Function, // eslint-disable-line
     onSuccess: Function, // eslint-disable-line

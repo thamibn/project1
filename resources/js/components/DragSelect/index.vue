@@ -5,9 +5,9 @@
 </template>
 
 <script>
-import Sortable from 'sortablejs';
+  import Sortable from 'sortablejs';
 
-export default {
+  export default {
   name: 'DragSelect',
   props: {
     value: {

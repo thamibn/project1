@@ -74,8 +74,9 @@
 </template>
 
 <script>
-import local from './local';
-const viewName = 'i18nView';
+  import local from './local';
+
+  const viewName = 'i18nView';
 
 export default {
   name: 'I18n',

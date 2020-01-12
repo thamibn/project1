@@ -4,6 +4,7 @@
 */
 'use strict';
 import Vue from 'vue';
+
 export default function treeToArray(data, expandAll, parent, level, item) {
   const marLTemp = [];
   let tmp = [];

@@ -19,10 +19,10 @@
 </template>
 
 <script>
-import clipboard from '@/utils/clipboard';
-import icons from './require-icons';
+  import clipboard from '@/utils/clipboard';
+  import icons from './require-icons';
 
-export default {
+  export default {
   name: 'ElementUi',
   data() {
     return {

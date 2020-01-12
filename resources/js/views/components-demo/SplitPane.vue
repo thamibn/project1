@@ -19,9 +19,9 @@
 </template>
 
 <script>
-import splitPane from 'vue-splitpane';
+  import splitPane from 'vue-splitpane';
 
-export default {
+  export default {
   name: 'SplitpaneDemo',
   components: { splitPane },
   methods: {

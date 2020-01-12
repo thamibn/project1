@@ -71,10 +71,10 @@
 </template>
 
 <script>
-import { toggleClass } from '@/utils';
-import '@/assets/custom-theme/index.css'; // the theme changed version element-ui css
+  import {toggleClass} from '@/utils';
+  import '@/assets/custom-theme/index.css'; // the theme changed version element-ui css
 
-export default {
+  export default {
   name: 'Theme',
   data() {
     return {

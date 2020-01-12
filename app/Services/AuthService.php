@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\UserResource;
@@ -44,64 +45,14 @@ class AuthService
     }
 
     /**
-     * @return ValidationException
-     */
-    protected function validationFailed(): ValidationException
-    {
-        return ValidationException::withMessages([
-            'email' => ['Login failed email or password incorrect']
-        ]);
-    }
-
-    /**
-     * @param $grantType
-     * @param array $data
-     * @return array
-     * @throws ValidationException
-     * @throws BindingResolutionException
-     */
-    private function proxy($grantType, array $data = [])
-    {
-        $postData = array_merge($data, [
-            'grant_type' => $grantType,
-            'client_id' => env('PASSWORD_CLIENT_ID'),
-            'client_secret' => env('PASSWORD_CLIENT_SECRET'),
-            'scope' => '',
-        ]);
-        /** @noinspection PhpUnhandledExceptionInspection */
-        $request = app()->make('request');
-        $request->request->add($postData);
-        $tokenRequest = Request::create(
-            env('APP_URL') . '/oauth/token',
-            'post'
-        );
-
-        $response = Route::dispatch($tokenRequest);
-        if ($response->getStatusCode() === 200) {
-            $results = json_decode($response->getContent());
-        } else {
-            throw $this->validationFailed();
-        }
-
-        $this->clearLoginAttempts($request);
-        return [
-            'user' => new UserResource(auth()->user()),
-            'access_token' => $results->access_token,
-            'toke_type' => 'Bearer',
-            'expires_in' => $results->expires_in,
-            'refresh_token' => $results->refresh_token,
-        ];
-    }
-
-    /**
      * @return array
      * @throws ValidationException
      * @throws BindingResolutionException
      */
     public function attemptRefresh(): array
     {
-        $refreshToken = request()->cookie(self::REFRESH_TOKEN);
         try {
+            $refreshToken = request()->cookie(self::REFRESH_TOKEN);
             return $this->proxy('refresh_token', [
                 'refresh_token' => $refreshToken
             ]);
@@ -128,6 +79,61 @@ class AuthService
     }
 
     /**
+     * @param $grantType
+     * @param array $data
+     * @return array
+     * @throws ValidationException
+     * @throws BindingResolutionException
+     */
+    private function proxy($grantType, array $data = [])
+    {
+        $postData = array_merge($data, [
+            'grant_type' => $grantType,
+            'client_id' => config('passportClient.CLIENT_ID'),
+            'client_secret' => config('passportClient.CLIENT_SECRET'),
+            'scope' => '',
+        ]);
+        $results = $this->makeRequest($postData);
+
+        return [
+            'user' => new UserResource(auth()->user()),
+            'access_token' => $results->access_token,
+            'toke_type' => 'Bearer',
+            'expires_in' => Carbon::parse(now()->addSeconds($results->expires_in))->toDateTimeString(),
+            'refresh_token' => $results->refresh_token,
+        ];
+    }
+
+    private function makeRequest(array $postData = []){
+        $request = app()->make('request');
+        $request->request->add($postData);
+        $tokenRequest = Request::create(
+            env('APP_URL') . '/oauth/token',
+            'post'
+        );
+
+        $response = Route::dispatch($tokenRequest);
+        if ($response->getStatusCode() === 200) {
+            $results = json_decode($response->getContent());
+        } else {
+            throw $this->validationFailed();
+        }
+
+        $this->clearLoginAttempts($request);
+        return $results;
+    }
+
+    /**
+     * @return ValidationException
+     */
+    private function validationFailed(): ValidationException
+    {
+        return ValidationException::withMessages([
+            'email' => ['Login failed email or password incorrect']
+        ]);
+    }
+
+    /**
      * Get the login username to be used by the controller.
      *
      * @return string
@@ -135,6 +141,10 @@ class AuthService
     public function username(): string
     {
         return 'email';
+    }
+
+    public function authUser(){
+        return auth()->user();
     }
 
 }

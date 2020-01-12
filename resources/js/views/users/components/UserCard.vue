@@ -32,9 +32,9 @@
 </template>
 
 <script>
-import PanThumb from '@/components/PanThumb';
+  import PanThumb from '@/components/PanThumb';
 
-export default {
+  export default {
   components: { PanThumb },
   props: {
     user: {

@@ -61,13 +61,13 @@
 </template>
 
 <script>
-import Resource from '@/api/resource';
-import RoleResource from '@/api/role';
-import waves from '@/directive/waves'; // Waves directive
-import permission from '@/directive/permission'; // Permission directive (v-permission)
-import checkPermission from '@/utils/permission'; // Permission checking
+  import Resource from '@/api/resource';
+  import RoleResource from '@/api/role';
+  import waves from '@/directive/waves'; // Waves directive
+  import permission from '@/directive/permission'; // Permission directive (v-permission)
+  import checkPermission from '@/utils/permission'; // Permission checking
 
-const roleResource = new RoleResource();
+  const roleResource = new RoleResource();
 const permissionResource = new Resource('permissions');
 
 export default {
@@ -93,6 +93,7 @@ export default {
   computed: {
     currentRole() {
       const found = this.list.find(role => role.id === this.currentRoleId);
+
       if (found === undefined) {
         return { name: '', permissions: [] };
       }

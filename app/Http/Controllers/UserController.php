@@ -1,224 +1,93 @@
 <?php
-/**
- * File UserController.php
- *
- * @author Tuan Duong <bacduong@gmail.com>
- * @package Laravue
- * @version 1.0
- */
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\PermissionResource;
+use Exception;
+use App\Models\User;
+use App\Services\UserService;
+use Illuminate\Http\JsonResponse;
+use App\Http\Requests\CreateUser;
+use App\Http\Requests\UpdateUser;
 use App\Http\Resources\UserResource;
-use App\Laravue\JsonResponse;
-use App\Laravue\Models\Permission;
-use App\Laravue\Models\Role;
-use App\Laravue\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\ResourceCollection;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Hash;
-use Validator;
 
-/**
- * Class UserController
- *
- * @package App\Http\Controllers
- */
 class UserController extends Controller
 {
-    const ITEM_PER_PAGE = 15;
+    /**
+     * @var UserService
+     */
+    private $userService;
 
     /**
-     * Display a listing of the user resource.
+     * UserController constructor.
+     * @param UserService $userService
+     */
+    public function __construct(UserService $userService)
+    {
+
+        $this->userService = $userService;
+    }
+
+    /**
+     * Display a listing of the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response|ResourceCollection
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index(Request $request)
     {
-        $searchParams = $request->all();
-        $userQuery = User::query();
-        $limit = Arr::get($searchParams, 'limit', static::ITEM_PER_PAGE);
-        $role = Arr::get($searchParams, 'role', '');
-        $keyword = Arr::get($searchParams, 'keyword', '');
-
-        if (!empty($role)) {
-            $userQuery->whereHas('roles', function($q) use ($role) { $q->where('name', $role); });
-        }
-
-        if (!empty($keyword)) {
-            $userQuery->where('name', 'LIKE', '%' . $keyword . '%');
-            $userQuery->where('email', 'LIKE', '%' . $keyword . '%');
-        }
-
-        return UserResource::collection($userQuery->paginate($limit));
+        return $this->userService->all($request);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param CreateUser $request
+     * @return JsonResponse
+     * @throws Exception
      */
-    public function store(Request $request)
+    public function store(CreateUser $request)
     {
-        $validator = Validator::make(
-            $request->all(),
-            array_merge(
-                $this->getValidationRules(),
-                [
-                    'password' => ['required', 'min:6'],
-                    'confirmPassword' => 'same:password',
-                ]
-            )
-        );
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 403);
-        } else {
-            $params = $request->all();
-            $user = User::create([
-                'name' => $params['name'],
-                'email' => $params['email'],
-                'password' => Hash::make($params['password']),
-            ]);
-            $role = Role::findByName($params['role']);
-            $user->syncRoles($role);
-
-            return new UserResource($user);
-        }
+        $user = $this->userService->create($request);
+        return $this->successResponse("User was created successfully", new UserResource($user));
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  User $user
-     * @return UserResource|\Illuminate\Http\JsonResponse
+     * @param User $user
+     * @return JsonResponse
      */
     public function show(User $user)
     {
-        return new UserResource($user);
+        $user = $this->userService->getById($user);
+        return $this->successResponse("User", new UserResource($user));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
-     * @param User    $user
-     * @return UserResource|\Illuminate\Http\JsonResponse
+     * @param UpdateUser $request
+     * @param User       $user
+     * @return JsonResponse
+     * @throws Exception
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateUser $request, User $user)
     {
-        if ($user === null) {
-            return response()->json(['error' => 'User not found'], 404);
-        }
-        if ($user->isAdmin()) {
-            return response()->json(['error' => 'Admin can not be modified'], 403);
-        }
-
-        $validator = Validator::make($request->all(), $this->getValidationRules(false));
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 403);
-        } else {
-            $email = $request->get('email');
-            $found = User::where('email', $email)->first();
-            if ($found && $found->id !== $user->id) {
-                return response()->json(['error' => 'Email has been taken'], 403);
-            }
-
-            $user->name = $request->get('name');
-            $user->email = $email;
-            $user->save();
-            return new UserResource($user);
-        }
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request
-     * @param User    $user
-     * @return UserResource|\Illuminate\Http\JsonResponse
-     */
-    public function updatePermissions(Request $request, User $user)
-    {
-        if ($user === null) {
-            return response()->json(['error' => 'User not found'], 404);
-        }
-
-        if ($user->isAdmin()) {
-            return response()->json(['error' => 'Admin can not be modified'], 403);
-        }
-
-        $permissionIds = $request->get('permissions', []);
-        $rolePermissionIds = array_map(
-            function($permission) {
-                return $permission['id'];
-            },
-
-            $user->getPermissionsViaRoles()->toArray()
-        );
-
-        $newPermissionIds = array_diff($permissionIds, $rolePermissionIds);
-        $permissions = Permission::allowed()->whereIn('id', $newPermissionIds)->get();
-        $user->syncPermissions($permissions);
-        return new UserResource($user);
+        $user = $this->userService->update($request, $user);
+        return $this->successResponse("User was updated successfully", new UserResource($user));
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  User $user
-     * @return \Illuminate\Http\Response
+     * @param User $user
+     * @return JsonResponse
+     * @throws Exception
      */
     public function destroy(User $user)
     {
-        if ($user->isAdmin()) {
-            response()->json(['error' => 'Ehhh! Can not delete admin user'], 403);
-        }
-
-        try {
-            $user->delete();
-        } catch (\Exception $ex) {
-            response()->json(['error' => $ex->getMessage()], 403);
-        }
-
-        return response()->json(null, 204);
-    }
-
-    /**
-     * Get permissions from role
-     *
-     * @param User $user
-     * @return array|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
-     */
-    public function permissions(User $user)
-    {
-        try {
-            return new JsonResponse([
-                'user' => PermissionResource::collection($user->getDirectPermissions()),
-                'role' => PermissionResource::collection($user->getPermissionsViaRoles()),
-            ]);
-        } catch (\Exception $ex) {
-            response()->json(['error' => $ex->getMessage()], 403);
-        }
-    }
-
-    /**
-     * @param bool $isNew
-     * @return array
-     */
-    private function getValidationRules($isNew = true)
-    {
-        return [
-            'name' => 'required',
-            'email' => $isNew ? 'required|email|unique:users' : 'required|email',
-            'roles' => [
-                'required',
-                'array'
-            ],
-        ];
+        $this->userService->destroy($user);
+        return $this->successResponse("User was deleted successfully", "");
     }
 }

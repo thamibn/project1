@@ -1,8 +1,11 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
-use App\Laravue\Acl;
-use App\Laravue\Models\Role;
+use App\Models\Role_Permission\Acl;
+use Illuminate\Support\Facades\Hash;
+use App\Models\Role_Permission\Role;
+use App\Models\Role_Permission\Faker;
 
 class UsersTableSeeder extends Seeder
 {
@@ -68,16 +71,16 @@ class UsersTableSeeder extends Seeder
 
         foreach ($userList as $fullName) {
             $name = str_replace(' ', '.', $fullName);
-            $roleName = \App\Laravue\Faker::randomInArray([
+            $roleName = Faker::randomInArray([
                 Acl::ROLE_MANAGER,
                 Acl::ROLE_EDITOR,
                 Acl::ROLE_USER,
                 Acl::ROLE_VISITOR,
             ]);
-            $user = \App\Laravue\Models\User::create([
+            $user = User::create([
                 'name' => $fullName,
-                'email' => strtolower($name) . '@laravue.dev',
-                'password' => \Illuminate\Support\Facades\Hash::make('laravue'),
+                'email' => strtolower($name) . '@project.dev',
+                'password' => Hash::make('123456'),
             ]);
 
             $role = Role::findByName($roleName);

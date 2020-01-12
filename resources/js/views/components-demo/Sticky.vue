@@ -99,9 +99,9 @@
 </template>
 
 <script>
-import Sticky from '@/components/Sticky';
+  import Sticky from '@/components/Sticky';
 
-export default {
+  export default {
   name: 'StickyDemo',
   components: { Sticky },
   data() {

@@ -52,9 +52,9 @@
 </template>
 
 <script>
-import countTo from 'vue-count-to';
+  import countTo from 'vue-count-to';
 
-export default {
+  export default {
   name: 'CountToDemo',
   components: { countTo },
   data() {

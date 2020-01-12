@@ -10,10 +10,10 @@
 </template>
 
 <script>
-import DndList from '@/components/DndList';
-import { fetchList } from '@/api/article';
+  import DndList from '@/components/DndList';
+  import {fetchList} from '@/api/article';
 
-export default {
+  export default {
   name: 'DndListDemo',
   components: { DndList },
   data() {

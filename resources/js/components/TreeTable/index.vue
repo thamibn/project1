@@ -42,9 +42,9 @@
 </template>
 
 <script>
-import treeToArray, { addAttrs } from './eval.js';
+  import treeToArray, {addAttrs} from './eval.js';
 
-export default {
+  export default {
   name: 'TreeTable',
   props: {
     data: {

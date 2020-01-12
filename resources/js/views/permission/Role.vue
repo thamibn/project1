@@ -62,12 +62,12 @@
 </template>
 
 <script>
-import path from 'path';
-import { deepClone } from '@/utils';
-import { getRoutes, getRoles, addRole, deleteRole, updateRole } from '@/api/role';
-import i18n from '@/lang';
+  import path from 'path';
+  import {deepClone} from '@/utils';
+  import {addRole, deleteRole, getRoles, getRoutes, updateRole} from '@/api/role';
+  import i18n from '@/lang';
 
-const defaultRole = {
+  const defaultRole = {
   key: '',
   name: '',
   description: '',

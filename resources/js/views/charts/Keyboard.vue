@@ -5,9 +5,9 @@
 </template>
 
 <script>
-import Chart from '@/components/Charts/Keyboard';
+  import Chart from '@/components/Charts/Keyboard';
 
-export default {
+  export default {
   name: 'KeyboardChart',
   components: { Chart },
 };

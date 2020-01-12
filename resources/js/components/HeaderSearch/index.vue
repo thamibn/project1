@@ -18,11 +18,11 @@
 </template>
 
 <script>
-import Fuse from 'fuse.js';
-import path from 'path';
-import i18n from '@/lang';
+  import Fuse from 'fuse.js';
+  import path from 'path';
+  import i18n from '@/lang';
 
-export default {
+  export default {
   name: 'HeaderSearch',
   data() {
     return {

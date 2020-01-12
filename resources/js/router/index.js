@@ -1,17 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-
-/**
- * Layzloading will create many files and slow on compiling, so best not to use lazyloading on devlopment.
- * The syntax is lazyloading, but we convert to proper require() with babel-plugin-syntax-dynamic-import
- * @see https://doc.laravue.dev/guide/advanced/lazy-loading.html
- */
-
-Vue.use(Router);
-
 /* Layout */
 import Layout from '@/layout';
-
 /* Router for modules */
 import elementUiRoutes from './modules/element-ui';
 import componentRoutes from './modules/components';
@@ -22,6 +12,14 @@ import nestedRoutes from './modules/nested';
 import errorRoutes from './modules/error';
 import excelRoutes from './modules/excel';
 import permissionRoutes from './modules/permission';
+
+/**
+ * Layzloading will create many files and slow on compiling, so best not to use lazyloading on devlopment.
+ * The syntax is lazyloading, but we convert to proper require() with babel-plugin-syntax-dynamic-import
+ * @see https://doc.laravue.dev/guide/advanced/lazy-loading.html
+ */
+
+Vue.use(Router);
 
 /**
  * Sub-menu only appear when children.length>=1

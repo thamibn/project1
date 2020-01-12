@@ -3,11 +3,12 @@
 </template>
 
 <script>
-import echarts from 'echarts';
-require('echarts/theme/macarons'); // echarts theme
-import { debounce } from '@/utils';
+  import echarts from 'echarts';
+  import {debounce} from '@/utils';
 
-const animationDuration = 3000;
+  require('echarts/theme/macarons'); // echarts theme
+
+  const animationDuration = 3000;
 
 export default {
   props: {

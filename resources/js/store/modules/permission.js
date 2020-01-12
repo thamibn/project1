@@ -1,4 +1,4 @@
-import { asyncRoutes, constantRoutes } from '@/router';
+import {asyncRoutes, constantRoutes} from '@/router';
 
 /**
  * Check if it matches the current user right by meta.role

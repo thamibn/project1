@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Role_Permission\Role;
+use App\Models\Role_Permission\Permission;
+
 return [
 
     'models' => [
@@ -13,7 +16,7 @@ return [
          * `Spatie\Permission\Contracts\Permission` contract.
          */
 
-        'permission' => App\Laravue\Models\Permission::class,
+        'permission' => Permission::class,
 
         /*
          * When using the "HasRoles" trait from this package, we need to know which
@@ -24,7 +27,7 @@ return [
          * `Spatie\Permission\Contracts\Role` contract.
          */
 
-        'role' => App\Laravue\Models\Role::class,
+        'role' => Role::class,
 
     ],
 

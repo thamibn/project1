@@ -112,13 +112,13 @@
 </template>
 
 <script>
-import PanThumb from '@/components/PanThumb';
-import MdInput from '@/components/MDinput';
-import Mallki from '@/components/TextHoverEffect/Mallki';
-import DropdownMenu from '@/components/Share/DropdownMenu';
-import waves from '@/directive/waves/index.js'; // v-wave directive
+  import PanThumb from '@/components/PanThumb';
+  import MdInput from '@/components/MDinput';
+  import Mallki from '@/components/TextHoverEffect/Mallki';
+  import DropdownMenu from '@/components/Share/DropdownMenu';
+  import waves from '@/directive/waves/index.js'; // v-wave directive
 
-export default {
+  export default {
   name: 'ComponentMixinDemo',
   components: {
     PanThumb,

@@ -19,8 +19,9 @@
 </template>
 
 <script>
-import RoleResource from '@/api/role';
-const roleResource = new RoleResource();
+  import RoleResource from '@/api/role';
+
+  const roleResource = new RoleResource();
 export default {
   data() {
     return {

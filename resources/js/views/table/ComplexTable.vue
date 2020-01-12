@@ -147,12 +147,12 @@
 </template>
 
 <script>
-import { fetchList, fetchPv, createArticle, updateArticle } from '@/api/article';
-import waves from '@/directive/waves'; // Waves directive
-import { parseTime } from '@/utils';
-import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
+  import {createArticle, fetchList, fetchPv, updateArticle} from '@/api/article';
+  import waves from '@/directive/waves'; // Waves directive
+  import {parseTime} from '@/utils';
+  import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
 
-const calendarTypeOptions = [
+  const calendarTypeOptions = [
   { key: 'CN', display_name: 'China' },
   { key: 'US', display_name: 'USA' },
   { key: 'JA', display_name: 'Japan' },

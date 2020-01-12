@@ -57,9 +57,10 @@
 </template>
 
 <script>
-import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
-import Resource from '@/api/resource';
-const articleResource = new Resource('articles');
+  import Pagination from '@/components/Pagination'; // Secondary package based on el-pagination
+  import Resource from '@/api/resource';
+
+  const articleResource = new Resource('articles');
 
 export default {
   name: 'ArticleList',

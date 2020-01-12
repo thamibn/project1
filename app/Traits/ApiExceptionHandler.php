@@ -24,49 +24,57 @@ trait ApiExceptionHandler
         if ($exception instanceof ModelNotFoundException) {
             $errorBody = [
                 'status' => Response::HTTP_NOT_FOUND,
-                'code' => 'MODEL_404',
-                'message' => "Entry for ".ucfirst($exception->getModel())." not found",
+                'code' => $exception->getCode(),
+                'track' => 'MODEL_404',
+                'message' => ucfirst(str_replace('App\\Models\\', '', $exception->getModel()))." not found",
             ];
         } else if ($exception instanceof NotFoundHttpException)
             $errorBody = [
                 'status' => Response::HTTP_NOT_FOUND,
-                'code' => 'ROUTE_404',
+                'code' => $exception->getCode(),
+                'track' => 'ROUTE_404',
                 'message' => 'The requested route was not found',
             ];
         else if ($exception instanceof MethodNotAllowedHttpException)
             $errorBody = [
                 'status' => Response::HTTP_METHOD_NOT_ALLOWED,
-                'code' => 'METHOD_405',
+                'code' => $exception->getCode(),
+                'track' => 'METHOD_405',
                 'message' => $exception->getMessage(),
             ];
         else if ($exception instanceof ValidationException)
             $errorBody = [
                 'status' => $exception->status,
-                'code' => ($exception->status === 422) ? "VALIDATION_422" : "ATTEMPTS_429",
+                'code' => $exception->getCode(),
+                'track' => ($exception->status === 422) ? "VALIDATION_422" : "ATTEMPTS_429",
                 'message' => $exception->errors(),
             ];
         else if ($exception instanceof BadRequestHttpException)
             $errorBody = [
                 'status' => Response::HTTP_BAD_REQUEST,
-                'code' => 'REQUEST_400',
+                'code' => $exception->getCode(),
+                'track' => 'REQUEST_400',
                 'message' => $exception->getMessage(),
             ];
         else if ($exception instanceof AuthenticationException)
             $errorBody = [
                 'status' => Response::HTTP_UNAUTHORIZED,
-                'code' => 'AUTHENTICATION_401',
+                'code' => $exception->getCode(),
+                'track' => 'AUTHENTICATION_401',
                 'message' => "Unauthenticated, Please login.",
             ];
         else if ($exception instanceof AuthorizationException)
             $errorBody = [
                 'status' => Response::HTTP_FORBIDDEN,
-                'code' => 'AUTHORIZATION_403',
+                'code' => $exception->getCode(),
+                'track' => 'AUTHORIZATION_403',
                 'message' => $exception->getMessage(),
             ];
         else if($exception instanceof  HttpException){
             $errorBody = [
                 'status' => $exception->getCode(),
-                'code' => 'HTTP_'.$exception->getCode(),
+                'code' => $exception->getCode(),
+                'track' => 'HTTP_'.$exception->getCode(),
                 'message' => $exception->getMessage(),
             ];
         }
@@ -75,21 +83,31 @@ trait ApiExceptionHandler
             if($errorCode == 1451) {
                 $errorBody = [
                     'status' => Response::HTTP_CONFLICT,
-                    'code' => 'DB_409',
+                    'code' => $exception->getCode(),
+                    'track' => 'SQLSTATE['.$exception->getCode().']',
                     'message' => "Cannot remove resource, it is related to another resource",
+                ];
+            }else if($errorCode === 1452){
+                $errorBody = [
+                    'status' => Response::HTTP_CONFLICT,
+                    'code' => $exception->getCode(),
+                    'track' => 'SQLSTATE['.$exception->getCode().']',
+                    'message' => "Cannot add or update a child row: a foreign key constraint fails",
                 ];
             }
         }
-        else
+        else{
             $errorBody = [
                 'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
-                'code' => 'SERVER_500',
+                'code' => $exception->getCode(),
+                'track' => 'SERVER_500',
                 'message' => $exception->getMessage(),
             ];
-
+        }
 
         return \response()->json([
-            'error' => $errorBody
+            'error' => $errorBody,
+            'Exception' => get_class($exception)
         ], $errorBody['status']);
     }
 }

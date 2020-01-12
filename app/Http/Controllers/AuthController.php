@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\LoginDetails;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Contracts\Container\BindingResolutionException;
@@ -39,8 +40,7 @@ class AuthController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => "Successfully logged in",
-                'data' => $data,
-                ])->withCookie(self::REFRESH_TOKEN,$refreshToken, 14400); //valid for 10 days since the refresh token is also valid for 10 days
+                'data' => $data,                ])->withCookie(self::REFRESH_TOKEN,$refreshToken, 14400); //valid for 10 days since the refresh token is also valid for 10 days
         } catch (ValidationException $e) {
             throw $e;
         }
@@ -78,11 +78,8 @@ class AuthController extends Controller
         return $this->successResponse("logout successfully", $data);
     }
 
-    /**
-     * @return JsonResponse
-     */
-    public function user(){
-        return $this->successResponse("user", Auth::user());
+    public function authenticatedUser(){
+        return $this->successResponse("User", new UserResource($this->authService->authUser()));
     }
 
 }
