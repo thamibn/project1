@@ -46,7 +46,7 @@ service.interceptors.response.use(
       title = error.response.statusText;
     }
 
-    if(statusCode !== 422 || statusCode !== 429){
+    if(statusCode !== 422 && statusCode !== 429){
       Notification({
         title: title,
         message: message,

@@ -20,6 +20,7 @@ class AppServiceProvider extends ServiceProvider
         Passport::useClientModel('\App\Models\Passport\Client');
 
         if ($this->app->isLocal()) {
+            $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
             $this->app->register(TelescopeServiceProvider::class);
         }
     }

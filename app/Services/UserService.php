@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\UserResource;
 use App\Models\Role_Permission\Permission;
+use App\Http\Resources\PermissionResource;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Auth\Access\AuthorizationException;
 
 class UserService
@@ -35,7 +37,7 @@ class UserService
             $userQuery->where('name', 'LIKE', '%' . $keyword . '%');
             $userQuery->where('email', 'LIKE', '%' . $keyword . '%');
         }
-        return UserResource::collection($userQuery->paginate($limit));
+        return UserResource::collection($userQuery->orderBy("name", "ASC")->paginate($limit));
     }
 
     /**
@@ -75,8 +77,9 @@ class UserService
      * @throws Exception
      */
     public function update($request, User $user){
+
         if ($user->isAdmin()) {
-            return AuthorizationException::class;
+            abort(403, 'Unauthorized action.');
         }
         DB::beginTransaction();
         try {
@@ -96,7 +99,7 @@ class UserService
      */
     public function destroy(User $user){
         if ($user->isAdmin()) {
-            return AuthorizationException::class;
+            abort(403, 'Unauthorized action.');
         }
         try {
             $user->delete();
@@ -116,7 +119,7 @@ class UserService
     public function updatePermissions(Request $request, User $user)
     {
         if ($user->isAdmin()) {
-            return AuthorizationException::class;
+            abort(403, 'Unauthorized action.');
         }
 
         $permissionIds = $request->get('permissions', []);
@@ -132,17 +135,16 @@ class UserService
      * Get permissions from role
      *
      * @param User $user
-     * @return \App\Models\User
+     * @return array
      * @throws \Exception
      */
     public function permissions(User $user)
     {
         try {
-//            return new JsonResponse([
-//                'user' => PermissionResource::collection($user->getDirectPermissions()),
-//                'role' => PermissionResource::collection($user->getPermissionsViaRoles()),
-//            ]);
-            return $user;
+            return [
+                'user' => PermissionResource::collection($user->getDirectPermissions()),
+                'role' => PermissionResource::collection($user->getPermissionsViaRoles()),
+            ];
         } catch (Exception $e) {
             throw $e;
         }

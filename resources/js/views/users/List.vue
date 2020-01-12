@@ -23,13 +23,13 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="Name">
+      <el-table-column align="left" label="Name">
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="Email">
+      <el-table-column align="left" label="Email">
         <template slot-scope="scope">
           <span>{{ scope.row.email }}</span>
         </template>
@@ -37,22 +37,19 @@
 
       <el-table-column align="center" label="Role" width="120">
         <template slot-scope="scope">
-          <span>{{ scope.row.roles.join(', ') }}</span>
+          <span>{{ scope.row.roles.join(', ') | uppercaseFirst }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="Actions" width="350">
+      <el-table-column align="center" label="Actions">
         <template slot-scope="scope">
           <router-link v-if="!scope.row.roles.includes('admin')" :to="'/administrator/users/edit/'+scope.row.id">
             <el-button v-permission="['manage user']" type="primary" size="small" icon="el-icon-edit">
-              Edit
             </el-button>
           </router-link>
-          <el-button v-if="!scope.row.roles.includes('admin')" v-permission="['manage permission']" type="warning" size="small" icon="el-icon-edit" @click="handleEditPermissions(scope.row.id);">
-            Permissions
+          <el-button v-if="!scope.row.roles.includes('admin')" v-permission="['manage permission']" type="warning" size="small" icon="el-icon-lock" @click="handleEditPermissions(scope.row.id)">
           </el-button>
-          <el-button v-if="scope.row.roles.includes('visitor')" v-permission="['manage user']" type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.id, scope.row.name);">
-            Delete
+          <el-button :disabled="!scope.row.roles.includes('visitor')" v-if="!scope.row.roles.includes('admin')" v-permission="['manage user']" type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope.row.id, scope.row.name)">
           </el-button>
         </template>
       </el-table-column>

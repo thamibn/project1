@@ -1,14 +1,5 @@
 <?php
 
-use App\Models\User;
-use App\Http\Resources\UserResource;
-use Illuminate\Support\Facades\Route;
-
-Route::get("test/{id}", function ($id){
-   $user = User::where('id', $id)->first();
-
-   return new UserResource($user);
-});
 /**
  *Authentication routes only, [public and protected ones]
  */

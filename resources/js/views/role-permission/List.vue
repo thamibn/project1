@@ -21,7 +21,7 @@
 
       <el-table-column v-if="checkPermission(['manage permission'])" align="center" label="Actions" width="200">
         <template slot-scope="scope">
-          <el-button v-if="scope.row.name !== 'admin'" v-permission="['manage permission']" type="primary" size="small" icon="el-icon-edit" @click="handleEditPermissions(scope.row.id);">
+          <el-button v-if="scope.row.name !== 'admin'" v-permission="['manage permission']" type="primary" size="small" icon="el-icon-edit" @click="handleEditPermissions(scope.row.id)">
             {{ $t('permission.editPermission') }}
           </el-button>
         </template>
@@ -93,7 +93,6 @@ export default {
   computed: {
     currentRole() {
       const found = this.list.find(role => role.id === this.currentRoleId);
-
       if (found === undefined) {
         return { name: '', permissions: [] };
       }
@@ -119,7 +118,10 @@ export default {
     checkPermission,
     async getRoles() {
       this.loading = true;
+      let roleName = this.$store.getters.roles[0];
       const { data } = await roleResource.list({});
+      const found = data.find(role => role.name === roleName);
+      this.currentRoleId = found.id;
       this.list = data;
       this.list.forEach((role, index) => {
         role['index'] = index + 1;

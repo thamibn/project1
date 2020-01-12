@@ -14,7 +14,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 class RoleService
 {
     public function all(){
-        return RoleResource::collection(Role::all());
+        return RoleResource::collection(Role::orderBy('name', 'ASC')->get());
     }
 
     /**

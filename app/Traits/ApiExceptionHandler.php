@@ -72,7 +72,7 @@ trait ApiExceptionHandler
             ];
         else if($exception instanceof  HttpException){
             $errorBody = [
-                'status' => $exception->getCode(),
+                'status' => $exception->getStatusCode(),
                 'code' => $exception->getCode(),
                 'track' => 'HTTP_'.$exception->getCode(),
                 'message' => $exception->getMessage(),
@@ -107,7 +107,9 @@ trait ApiExceptionHandler
 
         return \response()->json([
             'error' => $errorBody,
-            'Exception' => get_class($exception)
+            'Exception' => get_class($exception),
+            'file' => $exception->getFile(),
+            'Line' => $exception->getLine()
         ], $errorBody['status']);
     }
 }

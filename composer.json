@@ -29,6 +29,7 @@
         "laravel/passport": "^8.0"
     },
     "require-dev": {
+        "barryvdh/laravel-ide-helper": "^2.6",
         "beyondcode/laravel-dump-server": "^1.0",
         "facade/ignition": "^1.4",
         "filp/whoops": "^2.0",

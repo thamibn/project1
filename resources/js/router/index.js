@@ -68,8 +68,9 @@ export const constantRoutes = [
   },
   {
     path: '/404',
-    redirect: { name: 'Page404' },
     component: () => import('@/views/error-page/404'),
+    name: 'Page404',
+    meta: { title: 'page404', noCache: true },
     hidden: true,
   },
   {
@@ -153,7 +154,6 @@ export const asyncRoutes = [
       },
     ],
   },
-  errorRoutes,
   excelRoutes,
   {
     path: '/zip',

@@ -90,4 +90,19 @@ class UserController extends Controller
         $this->userService->destroy($user);
         return $this->successResponse("User was deleted successfully", "");
     }
+
+    public function permissions(User $user){
+        $data = [];
+        try {
+            $data = $this->userService->permissions($user);
+
+        } catch (Exception $e) {
+        }
+
+        return $this->successResponse("User Permissions", $data);
+    }
+
+    public function updatePermissions(Request $request, User $user){
+        return $this->userService->updatePermissions($request,$user);
+    }
 }

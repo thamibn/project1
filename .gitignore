@@ -15,6 +15,7 @@
 /public/*.js.map
 .env.backup
 .idea
+_ide_helper.php
 .phpunit.result.cache
 Homestead.json
 Homestead.yaml
